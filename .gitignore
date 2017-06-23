@@ -1,0 +1,13 @@
+/target/
+*.iml
+*.ipr
+*.iws
+*.sublime-project
+*.sublime-workspace
+.idea
+.classpath
+.project
+.settings
+.DS_Store
+.metadata
+.tern-project
