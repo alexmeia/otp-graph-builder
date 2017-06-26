@@ -41,6 +41,21 @@
       <artifactId>commons-io</artifactId>
       <version>2.5</version>
     </dependency>
-  </dependencies>  
+  </dependencies>
+  
+  <!-- JAX-RS API -->
+  <!-- with the jersy-client we implicitly add dependency to jersey-core -->
+  <dependency>
+	<groupId>com.sun.jersey</groupId>
+	<artifactId>jersey-client</artifactId>
+	<version>1.18.3</version>
+  </dependency>
+	
+  <dependency>
+	<groupId>org.glassfish.jersey.media</groupId>
+	<artifactId>jersey-media-json-jackson</artifactId>
+	<version>2.16</version>
+  </dependency>
+
 
 </project>
