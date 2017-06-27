@@ -75,9 +75,7 @@ public class App {
 	        OpenDataService openDataService = new OpenDataService();
 	        String gftsDataSetUrl = "http://dati.toscana.it/api/rest/dataset/rt-oraritb";
 	        
-	        CKANDataSet gftsDataSet;
-		
-			gftsDataSet = openDataService.getCkanDataSet(gftsDataSetUrl);
+	        CKANDataSet gftsDataSet = openDataService.getCkanDataSet(gftsDataSetUrl);
 			
 	        for (CKANResource gtfsResource : gftsDataSet.getResources()) {
 	        	GtfsBundle gtfsBundle = new GtfsBundle();
@@ -89,8 +87,8 @@ public class App {
 	 	        gtfsBundle.setPath(gtfsFile);
 	 	        gtfsBundle.parentStationTransfers = true;
 	 	        gtfsBundle.linkStopsToParentStations = true;
-	 	        gtfsBundle.setTransfersTxtDefinesStationPaths(true);
-	 	        gtfsBundle.maxInterlineDistance = 1000;
+	 	        gtfsBundle.setTransfersTxtDefinesStationPaths(false);
+	 	        gtfsBundle.maxInterlineDistance = 200;
 	 	        gtfsBundles.add(gtfsBundle);
 	        }
 	       
@@ -111,7 +109,7 @@ public class App {
 	        pruneFloatingIslands.setPruningThresholdIslandWithStops(20);
 	        pruneFloatingIslands.buildGraph(graph, extra);
 	        
-	        File graphOutput = new File("/home/alexmeia/otp/graphs/toscana/" + "Graph.obj");
+	        File graphOutput = new File("/Users/ale/otp/graphs/toscana/" + "Graph.obj");
 	
 	        graph.save(graphOutput);
 	        

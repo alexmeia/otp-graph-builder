@@ -25,6 +25,7 @@ public class TestOpenData {
 	
 	@Test
 	public void testGetCkanDataSet() throws JsonParseException, JsonMappingException, IOException {
+		
 		String url ="http://dati.toscana.it/api/rest/dataset/rt-oraritb";
 		Client client = ClientBuilder.newClient( new ClientConfig().register( LoggingFilter.class ) );
 		WebTarget webTarget = client.target(url);
