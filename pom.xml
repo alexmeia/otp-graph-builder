@@ -42,6 +42,13 @@
       <version>2.5</version>
     </dependency>
     
+    <!-- Mail utils -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-email</artifactId>
+      <version>1.4</version>
+    </dependency>
+    
   </dependencies>
   
 </project>

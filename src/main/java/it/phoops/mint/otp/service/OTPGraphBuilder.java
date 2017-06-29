@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.mail.EmailException;
 import org.opentripplanner.graph_builder.model.GtfsBundle;
 import org.opentripplanner.graph_builder.module.DirectTransferGenerator;
 import org.opentripplanner.graph_builder.module.EmbedConfig;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.databind.node.MissingNode;
 
 import it.phoops.mint.otp.model.CKANDataSet;
 import it.phoops.mint.otp.model.CKANResource;
+import it.phoops.mint.otp.util.Constants;
 
 public class OTPGraphBuilder {
 	
@@ -47,6 +49,8 @@ public class OTPGraphBuilder {
 	public int generateGraphObject(Properties properties) {
 		
 		log.info( "OTP Graph Builder service started." );
+		
+		MailService mailService = new MailService();
 		
 		HashMap<Class<?>, Object> extra = new HashMap<Class<?>, Object>();
         Graph graph = new Graph();
@@ -114,22 +118,41 @@ public class OTPGraphBuilder {
 	        File graphOutput = new File(properties.getProperty("graph.output.dir") + "Graph.obj");
 	        graph.save(graphOutput);
 	        
+	        mailService.sendEmail(properties, Constants.MAIL_OK_SUBJECT, String.format("OTP graph object saved correcttly in %s.", graphOutput.getAbsolutePath()));
+	        
 	        return 0;
 	        
-    	} catch (MalformedURLException mue) {
-    		log.error("Error in retrieving data from URL:", mue);
+    	} catch (MalformedURLException e) {
+    		log.error("Error in retrieving data from URL:", e);
+    		sendErrorMail(properties, mailService, e);
     		return 8;
-    	} catch (JsonParseException jpe) {
-    		log.error("Error in parsing json from OpenData RT:", jpe);
+    	} catch (JsonParseException e) {
+    		log.error("Error in parsing json from OpenData RT:", e);
+    		sendErrorMail(properties, mailService, e);
     		return 8;
-    	} catch (JsonMappingException jme) {
-    		log.error("Error in mapping json from OpenData RT:", jme);
+    	} catch (JsonMappingException e) {
+    		log.error("Error in mapping json from OpenData RT:", e);
+    		sendErrorMail(properties, mailService, e);
     		return 8;
     	} catch (IOException e) {
     		log.error("Error in reding file:", e);
+    		sendErrorMail(properties, mailService, e);
+			return 8;
+		} catch (EmailException e) {
+			log.error("Error in sending mail feedback:", e);
+			sendErrorMail(properties, mailService, e);
 			return 8;
 		}
 	
+	}
+	
+	private void sendErrorMail(Properties props, MailService mailService, Exception e) {
+		try {
+			mailService.sendEmail(props, Constants.MAIL_ERROR_SUBJECT, 
+					String.format("An error occurred while generating OTP graph object.\n\n%s\n\nSee logs for further details.", e.toString()));
+		} catch (EmailException ee) {
+			log.error("Error in sending feedback mail feedback:", ee);
+		}
 	}
 	
 }
