@@ -2,7 +2,9 @@ package it.phoops.mint.otp.service;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -24,9 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.node.MissingNode;
 
+import it.phoops.mint.otp.dao.GraphBuilderDao;
 import it.phoops.mint.otp.model.CKANDataSet;
 import it.phoops.mint.otp.model.CKANResource;
+import it.phoops.mint.otp.model.GraphProperties;
 import it.phoops.mint.otp.util.Constants;
+import it.phoops.mint.otp.util.DbUtils;
 
 public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	
@@ -126,6 +131,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        graph.save(graphOutput);
 	        
 	        mailService.sendMail(properties, Constants.MAIL_OK_SUBJECT, String.format(Constants.MAIL_OK_MESSAGE_HEADER, graphOutput.getAbsolutePath()));
+	        saveGraphProperties(graph, properties);
 	        
 	        return 0;
 	        
@@ -140,6 +146,27 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 			}
     		return 8;
     	} 	
+	}
+	
+	private void saveGraphProperties(Graph graph, Properties properties) throws Exception {
+		
+		GraphProperties gp = new GraphProperties(); //TODO: pass graph in constructor
+		gp.setCreationDate(new Date());
+		gp.setEdges(graph.countEdges());
+		gp.setVertices(graph.countVertices());
+		gp.setTransitModes(graph.getTransitModes().toArray().toString());
+		gp.setAgencies(graph.getFeedIds().size());
+		gp.setHasDirectTransfers(graph.hasDirectTransfers);
+		gp.setHasTranist(graph.hasTransit);
+		gp.setHasStreets(graph.hasStreets);
+		
+		Connection conn = DbUtils.createConnection(properties);
+		
+		GraphBuilderDao graphBuilderDao = new GraphBuilderDao(conn);
+		graphBuilderDao.saveGraphProperties(gp);
+		
+		conn.close();
+		
 	}
 	
 }

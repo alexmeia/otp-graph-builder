@@ -23,7 +23,7 @@ public class TestMailService {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.username", "alessandro.meiattini@phoops.it");
-        props.put("mail.smtp.password", "vonnegut74");
+        props.put("mail.smtp.password", "0");
 	}
 	
 	@Test
