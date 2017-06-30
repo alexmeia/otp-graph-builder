@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.phoops.mint.otp.service.OTPGraphBuilder;
+import it.phoops.mint.otp.service.OTPGraphBuilderImpl;
 
 
 public class App {
@@ -19,7 +20,7 @@ public class App {
     public static void main( String[] args ) {
     	      
         if (args.length != 1) {
-			log.error("Wrong numbe of arguments:\nUsage: OtpGraphBuilder propertyFile");
+			log.error("Wrong number of arguments:\nUsage: otp-graph-builder property_file");
 			System.exit(8);
 		}
 		
@@ -31,8 +32,8 @@ public class App {
 			System.exit(8);
 		}
 		
-		OTPGraphBuilder otpGraphBuilder = new OTPGraphBuilder();
-		System.exit(otpGraphBuilder.generateGraphObject(properties));
+		OTPGraphBuilder otpGraphBuilder = new OTPGraphBuilderImpl(properties);
+		System.exit(otpGraphBuilder.generateGraphObject());
     }
     
     private static Properties getPropertiesFile(String filePath) {
