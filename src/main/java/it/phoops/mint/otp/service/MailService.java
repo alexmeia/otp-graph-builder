@@ -1,11 +1,13 @@
 package it.phoops.mint.otp.service;
 
-import java.util.Properties;
-
 import org.apache.commons.mail.EmailException;
+
+import it.phoops.mint.otp.model.GraphProperties;
 
 public interface MailService {
 
-	public String sendMail(Properties props, String subject, String message) throws EmailException;
+	public String sendMail(String subject, String message, boolean html) throws EmailException;
+	
+	public String buildHtmlReport(String header, GraphProperties actual, GraphProperties last);
 	
 }
