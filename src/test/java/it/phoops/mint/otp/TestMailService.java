@@ -23,14 +23,31 @@ public class TestMailService {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.username", "alessandro.meiattini@phoops.it");
-        props.put("mail.smtp.password", "0");
+        props.put("mail.smtp.password", "set_password");
 	}
 	
 	@Test
-	public void testMailService() throws EmailException  {
+	public void testSendSimpleMail() throws EmailException  {
 		
-		MailService ms = new MailServiceImpl();
-		String messageId = ms.sendMail(props, String.format("Test mail from %s", this.getClass()), "Test message.");		
+		MailService ms = new MailServiceImpl(props);
+		String messageId = ms.sendMail(String.format("Test mail from %s", this.getClass()), "Test message.", false);		
+		assertTrue(messageId != null);
+		
+	}
+	
+	@Test
+	public void testSendHtmlMail() throws EmailException  {
+		
+		StringBuilder sb = new StringBuilder("");
+		sb.append("<html><body><p>Test html mail</p>")
+		.append("<ul>")
+		.append("<li>first li element</li>")
+		.append("<li>second li element</li>")
+		.append("<li>third li element</li>")
+		.append("</ul></body></html>");
+		
+		MailService ms = new MailServiceImpl(props);
+		String messageId = ms.sendMail(String.format("Test html mail from %s", this.getClass()), sb.toString(), true);		
 		assertTrue(messageId != null);
 		
 	}
