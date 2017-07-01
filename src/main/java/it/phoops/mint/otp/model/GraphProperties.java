@@ -2,6 +2,10 @@ package it.phoops.mint.otp.model;
 
 import java.util.Date;
 
+import org.opentripplanner.routing.graph.Graph;
+
+import it.phoops.mint.otp.util.TransitUtils;
+
 public class GraphProperties {
 
 	private int vertices;
@@ -12,6 +16,21 @@ public class GraphProperties {
 	private Date creationDate;
 	private String transitModes;
 	private int agencies;
+	
+	public GraphProperties() {
+		
+	}
+	
+	public GraphProperties(Graph graph) {
+		this.creationDate = new Date();
+		this.edges = graph.countEdges();
+		this.vertices = graph.countVertices();
+		this.transitModes = TransitUtils.convertTranistModesToString(graph.getTransitModes());
+		this.agencies = graph.getFeedIds().size();
+		this.hasDirectTransfers = graph.hasDirectTransfers;
+		this.hasTranist = graph.hasTransit;
+		this.hasStreets = graph.hasStreets;
+	}
 	
 	public int getVertices() {
 		return vertices;
