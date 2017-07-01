@@ -3,8 +3,8 @@ package it.phoops.mint.otp.service;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -41,10 +41,11 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	private OpenDataService openDataService;
 	private OTPModuleFactory otpModuleFactory;
 	private Properties properties;
+	private Connection connection;
 	
 	public OTPGraphBuilderImpl(Properties properties) {
 		this.properties = properties;
-		this.mailService = new MailServiceImpl();
+		this.mailService = new MailServiceImpl(this.properties);
 		this.openDataService = new OpenDataServiceImpl();
 		this.otpModuleFactory = new OTPModuleFactoryImpl(); 
 	}
@@ -126,46 +127,91 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        embedConfig.buildGraph(graph, extra);
 	        
 	        // Check graph integrity before saving
+	        connection = DbUtils.createConnection(properties);
+	        GraphBuilderDao graphBuilderDao = new GraphBuilderDao(connection);
 	        
-	        File graphOutput = new File(properties.getProperty("graph.output.dir") + "Graph.obj");
-	        graph.save(graphOutput);
+	        GraphProperties graphProperties = new GraphProperties(graph);
+	        GraphProperties lastSavedProperties = graphBuilderDao.getLastSavedGraph();
 	        
-	        mailService.sendMail(properties, Constants.MAIL_OK_SUBJECT, String.format(Constants.MAIL_OK_MESSAGE_HEADER, graphOutput.getAbsolutePath()));
-	        saveGraphProperties(graph, properties);
+	        if (lastSavedProperties == null) {
+	        	lastSavedProperties = graphProperties;
+	        }
 	        
-	        return 0;
+	        log.info("Validating graph");
+	        
+	        if (compareGraphProperties(graphProperties, lastSavedProperties)) {
+	        
+		        File graphOutput = new File(properties.getProperty("graph.output.dir") + "Graph.obj");
+		        graph.save(graphOutput);
+		        
+		        log.info("Graph saved in " + graphOutput.getAbsolutePath());
+		        
+		        graphBuilderDao.saveGraphProperties(graphProperties);
+		        
+		        String message = mailService.buildHtmlReport(
+		        		String.format(Constants.MAIL_OK_MESSAGE_HEADER, graphOutput.getAbsolutePath()), 
+		        		graphProperties, lastSavedProperties);
+		        mailService.sendMail(Constants.MAIL_OK_SUBJECT, message, true);
+		        log.info("Feedback mail sent.");
+		        return 0;
+		        
+	        } else {
+	        	log.error("Proprieties of generated graph didn't match the expected values. Graph not saved.");
+	        	
+	        	String message = mailService.buildHtmlReport(
+		        		"The properties of the generated OTP graph didn't match the expected values. Graph was not saved.", 
+		        		graphProperties, lastSavedProperties);
+	        	mailService.sendMail("OTP graph was generated correctly but is not valid", message, true);
+	        	
+	        	log.info("Feedback mail sent.");
+	        	return 8;
+	        }
 	        
     	} catch (Exception e) {
     		log.error(e.getMessage(), e);
     		String mailSubject = String.format("%s: %s",Constants.MAIL_ERROR_SUBJECT, e.getMessage());
     		String mailMessage = String.format(Constants.MAIL_ERROR_MESSAGE_HEADER, e.toString());
     		try {
-				mailService.sendMail(properties, mailSubject, mailMessage);
+				mailService.sendMail(mailSubject, mailMessage, false);
+				log.info("Feedback mail sent.");
 			} catch (EmailException ee) {
 				log.error("Error in sending feedback mail message:", ee);
 			}
     		return 8;
-    	} 	
+    		
+    	} finally {
+    		if (connection != null) {
+    			try {
+					connection.close();
+				} catch (SQLException e) {
+					log.error("Error in closing db connection:", e);
+				}
+    		}
+    	}
 	}
 	
-	private void saveGraphProperties(Graph graph, Properties properties) throws Exception {
+	
+	private boolean compareGraphProperties(GraphProperties actual, GraphProperties last) {
 		
-		GraphProperties gp = new GraphProperties(); //TODO: pass graph in constructor
-		gp.setCreationDate(new Date());
-		gp.setEdges(graph.countEdges());
-		gp.setVertices(graph.countVertices());
-		gp.setTransitModes(graph.getTransitModes().toArray().toString());
-		gp.setAgencies(graph.getFeedIds().size());
-		gp.setHasDirectTransfers(graph.hasDirectTransfers);
-		gp.setHasTranist(graph.hasTransit);
-		gp.setHasStreets(graph.hasStreets);
+		if (actual.getAgencies() < last.getAgencies()) {
+			//TODO: log
+			return false;
+		}
 		
-		Connection conn = DbUtils.createConnection(properties);
+		if (Math.abs(actual.getVertices() - last.getVertices()) > 500) {
+			return false;
+		}
 		
-		GraphBuilderDao graphBuilderDao = new GraphBuilderDao(conn);
-		graphBuilderDao.saveGraphProperties(gp);
+		if (Math.abs(actual.getEdges() - last.getEdges()) > 500) {
+			return false;
+		}
 		
-		conn.close();
+		//TODO: just for testing, to be improved
+		if (actual.getTransitModes().length() != last.getTransitModes().length()) {
+			return false;
+		}
+		
+		return true;
 		
 	}
 	
