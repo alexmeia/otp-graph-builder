@@ -139,7 +139,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        
 	        log.info("Validating graph");
 	        
-	        if (compareGraphProperties(graphProperties, lastSavedProperties)) {
+	        if (isValidGraph(graphProperties, lastSavedProperties)) {
 	        
 		        File graphOutput = new File(properties.getProperty("graph.output.dir") + "Graph.obj");
 		        graph.save(graphOutput);
@@ -191,7 +191,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	}
 	
 	
-	private boolean compareGraphProperties(GraphProperties actual, GraphProperties last) {
+	private boolean isValidGraph(GraphProperties actual, GraphProperties last) {
 		
 		if (actual.getAgencies() < last.getAgencies()) {
 			//TODO: log
