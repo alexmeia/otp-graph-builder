@@ -31,5 +31,12 @@ public class TestTransitUtils {
 		assertTrue(transitModeStr.contains("TRAM"));
 		assertTrue(transitModeStr.contains("RAIL"));
 	}
+	
+	@Test
+	public void testAreTransitModesEqual() {
+		String actual = "TRAM, BUS, RAIL";
+		String last = "BUS, RAIL, TRAM";
+		assertTrue(TransitUtils.areTransitModesEqual(actual, last));
+	}
 
 }

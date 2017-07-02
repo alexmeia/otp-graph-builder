@@ -32,6 +32,7 @@ import it.phoops.mint.otp.model.CKANResource;
 import it.phoops.mint.otp.model.GraphProperties;
 import it.phoops.mint.otp.util.Constants;
 import it.phoops.mint.otp.util.DbUtils;
+import it.phoops.mint.otp.util.TransitUtils;
 
 public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	
@@ -193,23 +194,30 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	
 	private boolean isValidGraph(GraphProperties actual, GraphProperties last) {
 		
+		int verticesMaxDelta = Integer.parseInt(properties.getProperty("vertices.max.delta", "10000"));
+		int edgesMaxDelta = Integer.parseInt(properties.getProperty("edges.max.delta", "10000"));
+		
 		if (actual.getAgencies() < last.getAgencies()) {
-			//TODO: log
+			log.warn("The angencies size of the actual graph are lower than the agencies size of the last saved graph.");
 			return false;
 		}
 		
-		if (Math.abs(actual.getVertices() - last.getVertices()) > 500) {
+		if (Math.abs(actual.getVertices() - last.getVertices()) > verticesMaxDelta) {
+			log.warn("The vertces difference between the actual graph and the last saved graph is greater than the maximum delta.");
 			return false;
 		}
 		
-		if (Math.abs(actual.getEdges() - last.getEdges()) > 500) {
+		if (Math.abs(actual.getEdges() - last.getEdges()) > edgesMaxDelta) {
+			log.warn("The edges difference between the actual graph and the last saved graph is greater than the maximum delta.");
 			return false;
 		}
 		
-		//TODO: just for testing, to be improved
-		if (actual.getTransitModes().length() != last.getTransitModes().length()) {
+		if (!TransitUtils.areTransitModesEqual(actual.getTransitModes(), last.getTransitModes())) {
+			log.warn("Actual graph transit modes and last saved graph tranisit modes don't match.");
 			return false;
 		}
+		
+		log.info("Graph is valid.");
 		
 		return true;
 		
