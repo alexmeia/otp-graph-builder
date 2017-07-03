@@ -1,6 +1,6 @@
 package it.phoops.mint.otp;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import java.sql.Connection;
 import java.util.Date;
@@ -19,12 +19,13 @@ public class TestDb {
 	
 	@Before
 	public void init() {
+		
 		props = new Properties();
 		props.setProperty("db.driver", "org.postgresql.Driver");
 		props.setProperty("db.environment", "dev");
-		props.setProperty("db.dev.url", "jdbc:postgresql://localhost:5432/otp_development");
+		props.setProperty("db.dev.url", "jdbc:postgresql://localhost:5432/otp");
 		props.setProperty("db.dev.user", "otp");
-		props.setProperty("db.dev.password", "otp");
+		props.setProperty("db.dev.pwd", "otp");
 		
 	}
 	
