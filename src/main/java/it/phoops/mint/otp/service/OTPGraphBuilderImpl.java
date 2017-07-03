@@ -124,7 +124,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        DirectTransferGenerator directTransferGenerator = new DirectTransferGenerator();
 	        directTransferGenerator.buildGraph(graph, extra);
 	        
-	        // 7. Embed config module (empty configuration files)
+	        // 7. Embed configuration module (empty configuration files)
 	        EmbedConfig embedConfig = new EmbedConfig(MissingNode.getInstance(), MissingNode.getInstance());
 	        embedConfig.buildGraph(graph, extra);
 	        
@@ -204,12 +204,12 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 		}
 		
 		if (Math.abs(actual.getVertices() - last.getVertices()) > verticesMaxDelta) {
-			log.warn("The vertces difference between the actual graph and the last saved graph is greater than the maximum delta.");
+			log.warn("The vertces difference between the actual graph and the last saved graph is greater than maximum delta.");
 			return false;
 		}
 		
 		if (Math.abs(actual.getEdges() - last.getEdges()) > edgesMaxDelta) {
-			log.warn("The edges difference between the actual graph and the last saved graph is greater than the maximum delta.");
+			log.warn("The edges difference between the actual graph and the last saved graph is greater than maximum delta.");
 			return false;
 		}
 		
