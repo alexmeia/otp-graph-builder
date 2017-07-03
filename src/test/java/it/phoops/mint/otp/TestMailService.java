@@ -18,12 +18,12 @@ public class TestMailService {
 	@Before
 	public void init() {
 		props = new Properties();
-        props.put("mail.from", "alessandro.meiattini@phoops.it");
+        props.put("mail.from", "otp.graphbuilder@phoops.it");
         props.put("mail.to", "alessandro.meiattini@phoops.it");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.username", "alessandro.meiattini@phoops.it");
-        props.put("mail.smtp.password", "set_password");
+        props.put("mail.smtp.host", "smtp.phoops.priv");
+        props.put("mail.smtp.port", "25");
+        props.put("mail.smtp.username", "");
+        props.put("mail.smtp.password", "");
 	}
 	
 	@Test
