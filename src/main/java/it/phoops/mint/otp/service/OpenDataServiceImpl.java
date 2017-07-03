@@ -20,6 +20,7 @@ import it.phoops.mint.otp.model.CKANDataSet;
 
 public class OpenDataServiceImpl implements OpenDataService {
 	
+	@Override
 	public CKANDataSet getCkanDataSet(String url) throws JsonParseException, JsonMappingException, IOException {
 		
 		Client client = ClientBuilder.newClient( new ClientConfig().register( LoggingFilter.class ) );

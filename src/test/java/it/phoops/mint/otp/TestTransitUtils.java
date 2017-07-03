@@ -1,7 +1,6 @@
 package it.phoops.mint.otp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
@@ -34,9 +33,22 @@ public class TestTransitUtils {
 	
 	@Test
 	public void testAreTransitModesEqual() {
+		
 		String actual = "TRAM, BUS, RAIL";
 		String last = "BUS, RAIL, TRAM";
 		assertTrue(TransitUtils.areTransitModesEqual(actual, last));
+		
+		actual = "";
+		last = "";
+		assertTrue(TransitUtils.areTransitModesEqual(actual, last));
+		
+		actual = "test, one, two";
+		last = null;
+		assertFalse(TransitUtils.areTransitModesEqual(actual, last));
+		
+		actual = "rail, bus, ferry";
+		last = "bus, ferry, tram";
+		assertFalse(TransitUtils.areTransitModesEqual(actual, last));
 	}
 
 }

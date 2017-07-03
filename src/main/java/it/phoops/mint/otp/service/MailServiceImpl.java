@@ -18,14 +18,19 @@ public class MailServiceImpl implements MailService {
 		this.properties = properties;
 	}
 
+	@Override
 	public String sendMail(String subject, String message, boolean html) throws EmailException {
 		
 		Email email = html ? new HtmlEmail() : new SimpleEmail();
 		email.setHostName(properties.getProperty("mail.smtp.host"));
 		email.setSmtpPort(Integer.valueOf(properties.getProperty("mail.smtp.port")));
-		email.setAuthenticator(new DefaultAuthenticator(properties.getProperty("mail.smtp.username"),
-				properties.getProperty("mail.smtp.password")));
-		email.setSSLOnConnect(true);
+		String smtpUsername = properties.getProperty("mail.smtp.username");
+		
+		if (smtpUsername != null && !"".equals(smtpUsername)) {
+			email.setAuthenticator(new DefaultAuthenticator(smtpUsername, properties.getProperty("mail.smtp.password")));
+			email.setSSLOnConnect(true);
+		}
+		
 		email.setFrom(properties.getProperty("mail.from"));
 		email.setSubject(subject);
 		email.setMsg(message);
@@ -35,6 +40,7 @@ public class MailServiceImpl implements MailService {
 
 	}
 	
+	@Override
 	public String buildHtmlReport(String header, GraphProperties actual, GraphProperties last) {
 		
 		StringBuilder sb = new StringBuilder("");
