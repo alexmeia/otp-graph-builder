@@ -18,6 +18,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	 * org.opentripplanner.graph_builder.GraphBuilder.java and
 	 * org.opentripplanner.standalone.GraphBuilderParameters.java
 	 */
+	@Override
 	public OpenStreetMapModule createDefaultOSMModule() {
 		OpenStreetMapModule osmModule = new OpenStreetMapModule();
 		osmModule.setDefaultWayPropertySetSource(new DefaultWayPropertySetSource());
@@ -44,6 +45,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	 * org.opentripplanner.graph_builder.GraphBuilder.java and
 	 * org.opentripplanner.standalone.GraphBuilderParameters.java
 	 */
+	@Override
 	public PruneFloatingIslands createDefaultPruneFloatingIslands() {
 		PruneFloatingIslands pruneFloatingIslands = new PruneFloatingIslands();
 		pruneFloatingIslands.setPruningThresholdIslandWithoutStops(40); // TODO: what does it means? 
@@ -57,6 +59,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	 * org.opentripplanner.graph_builder.GraphBuilder.java and
 	 * org.opentripplanner.standalone.GraphBuilderParameters.java
 	 */
+	@Override
 	public GtfsBundle createDefaultGtfsBundle() {
 		GtfsBundle gtfsBundle = new GtfsBundle();
 		gtfsBundle.parentStationTransfers = true;
@@ -72,6 +75,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	 * org.opentripplanner.graph_builder.GraphBuilder.java and
 	 * org.opentripplanner.standalone.GraphBuilderParameters.java
 	 */
+	@Override
 	public GtfsModule createDefaultGtfsModule(List<GtfsBundle> gtfsBundles) {
 		GtfsModule gtfsModule = new GtfsModule(gtfsBundles);
 		gtfsModule.setFareServiceFactory(new DefaultFareServiceFactory());
@@ -79,6 +83,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 		return gtfsModule;
 	}
 
+	@Override
 	public GtfsBundle createCustomGtfsBundle(Properties props) {
 		// TODO Auto-generated method stub
 		// Define in properties file values to be read and build
@@ -86,6 +91,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 		return null;
 	}
 
+	@Override
 	public OpenStreetMapModule createCustomOSMModule(Properties properties) {
 		// TODO Auto-generated method stub
 		// Define in properties file values to be read and build
@@ -93,6 +99,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 		return null;
 	}
 
+	@Override
 	public PruneFloatingIslands createCustomPruneFloatingIslands(Properties properties) {
 		// TODO Auto-generated method stub
 		// Define in properties file values to be read and build

@@ -61,6 +61,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	 * EmbedConfig module, whose utility needs to be investigated).
 	 * 
 	 */
+	@Override
 	public int generateGraphObject() {
 		
 		log.info( "OTP Graph Builder service started." );
@@ -191,7 +192,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
     	}
 	}
 	
-	
+	// TODO: move to validator service class
 	private boolean isValidGraph(GraphProperties actual, GraphProperties last) {
 		
 		int verticesMaxDelta = Integer.parseInt(properties.getProperty("vertices.max.delta", "10000"));
