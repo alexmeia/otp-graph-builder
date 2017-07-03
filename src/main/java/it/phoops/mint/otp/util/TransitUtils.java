@@ -24,10 +24,18 @@ public class TransitUtils {
 
 	public static boolean areTransitModesEqual(String actual, String last) {
 		
+		if (actual == last) {
+			return true;
+		}
+		
+		if (actual == null || last == null) {
+			return false;
+		}
+		
 		List<String> actualList = Arrays.asList(actual.split("[,\\s]+"));
 		actualList.sort(String::compareToIgnoreCase);
 		
-		List<String> lastList = Arrays.asList(actual.split("[,\\s]+"));
+		List<String> lastList = Arrays.asList(last.split("[,\\s]+"));
 		lastList.sort(String::compareToIgnoreCase);
 		
 		return actualList.equals(lastList);
