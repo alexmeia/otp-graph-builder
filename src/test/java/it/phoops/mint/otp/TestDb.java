@@ -54,7 +54,7 @@ public class TestDb {
 		GraphBuilderDao gbd = new GraphBuilderDao(connection);
 		
 		gbd.saveGraphProperties(gp);
-		connection.commit();
+		//connection.commit();
 		connection.close();
 		
 	}

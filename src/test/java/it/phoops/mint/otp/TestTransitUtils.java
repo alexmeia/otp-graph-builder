@@ -49,6 +49,11 @@ public class TestTransitUtils {
 		actual = "rail, bus, ferry";
 		last = "bus, ferry, tram";
 		assertFalse(TransitUtils.areTransitModesEqual(actual, last));
+		
+		actual = null;
+		last = null;
+		assertTrue(TransitUtils.areTransitModesEqual(actual, last));
+		
 	}
 
 }
