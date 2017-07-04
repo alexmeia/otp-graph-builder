@@ -145,7 +145,6 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        
 		        File graphOutput = new File(properties.getProperty("graph.output.dir") + "Graph.obj");
 		        graph.save(graphOutput);
-		        
 		        log.info("Graph saved in " + graphOutput.getAbsolutePath());
 		        
 		        graphBuilderDao.saveGraphProperties(graphProperties);
@@ -155,6 +154,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 		        		graphProperties, lastSavedProperties);
 		        mailService.sendMail(Constants.MAIL_OK_SUBJECT, message, true);
 		        log.info("Feedback mail sent.");
+		        
 		        return 0;
 		        
 	        } else {
