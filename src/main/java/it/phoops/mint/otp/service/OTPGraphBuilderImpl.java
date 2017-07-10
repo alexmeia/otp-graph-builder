@@ -121,7 +121,9 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        streetLinker.buildGraph(graph, extra);
 	        
 	        // 6. Direct transfer generator module (without this module transfers between different agencies will not be possible)
-	        DirectTransferGenerator directTransferGenerator = new DirectTransferGenerator();
+	        DirectTransferGenerator directTransferGenerator = new DirectTransferGenerator(
+	        		Double.parseDouble(properties.getProperty("transfers.max.distance", "2000")));
+
 	        directTransferGenerator.buildGraph(graph, extra);
 	        
 	        // 7. Embed configuration module (empty configuration files)

@@ -8,6 +8,14 @@
   <name>graph-builder</name>
   <url>http://maven.apache.org</url>
   
+  <repositories>
+    <repository>
+      <id>ossrh_snapshots</id>
+      <name>Sonatype OSSRH Shapshot Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url> 
+    </repository>
+  </repositories>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -32,7 +40,7 @@
     <dependency>
       <groupId>org.opentripplanner</groupId>
       <artifactId>otp</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0-SNAPSHOT</version>
     </dependency>
     
     <!-- File utils -->
