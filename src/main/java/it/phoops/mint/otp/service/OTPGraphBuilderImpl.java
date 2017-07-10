@@ -120,7 +120,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        StreetLinkerModule streetLinker = new StreetLinkerModule();
 	        streetLinker.buildGraph(graph, extra);
 	        
-	        // 6. Direct transfer generator module
+	        // 6. Direct transfer generator module (without this module transfers between different agencies will not be possible)
 	        DirectTransferGenerator directTransferGenerator = new DirectTransferGenerator();
 	        directTransferGenerator.buildGraph(graph, extra);
 	        
@@ -166,6 +166,7 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	        	mailService.sendMail("OTP graph was generated correctly but is not valid", message, true);
 	        	
 	        	log.info("Feedback mail sent.");
+	        	
 	        	return 8;
 	        }
 	        
@@ -195,8 +196,8 @@ public class OTPGraphBuilderImpl implements OTPGraphBuilder {
 	// TODO: move to validator service class
 	private boolean isValidGraph(GraphProperties actual, GraphProperties last) {
 		
-		int verticesMaxDelta = Integer.parseInt(properties.getProperty("vertices.max.delta", "10000"));
-		int edgesMaxDelta = Integer.parseInt(properties.getProperty("edges.max.delta", "10000"));
+		int verticesMaxDelta = Integer.parseInt(properties.getProperty("vertices.max.delta", "15000"));
+		int edgesMaxDelta = Integer.parseInt(properties.getProperty("edges.max.delta", "30000"));
 		
 		if (actual.getAgencies() < last.getAgencies()) {
 			log.warn("The angencies size of the actual graph are lower than the agencies size of the last saved graph.");
