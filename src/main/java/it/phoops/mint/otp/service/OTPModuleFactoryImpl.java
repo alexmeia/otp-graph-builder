@@ -49,7 +49,7 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	public PruneFloatingIslands createDefaultPruneFloatingIslands() {
 		PruneFloatingIslands pruneFloatingIslands = new PruneFloatingIslands();
 		pruneFloatingIslands.setPruningThresholdIslandWithoutStops(40); // TODO: what does it means? 
-		pruneFloatingIslands.setPruningThresholdIslandWithStops(40);
+		pruneFloatingIslands.setPruningThresholdIslandWithStops(5);
 		
 		return pruneFloatingIslands;
 	}
@@ -62,10 +62,10 @@ public class OTPModuleFactoryImpl implements OTPModuleFactory {
 	@Override
 	public GtfsBundle createDefaultGtfsBundle() {
 		GtfsBundle gtfsBundle = new GtfsBundle();
-		gtfsBundle.parentStationTransfers = true;
+		gtfsBundle.parentStationTransfers = false;
         gtfsBundle.maxInterlineDistance = 200;
-        gtfsBundle.linkStopsToParentStations = true;
-        gtfsBundle.setTransfersTxtDefinesStationPaths(true);
+        gtfsBundle.linkStopsToParentStations = false;
+        gtfsBundle.setTransfersTxtDefinesStationPaths(false);
         
         return gtfsBundle;
 	}
